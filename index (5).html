@@ -1,0 +1,1894 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sweet Mishpuchah — Artisan Bakery</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #faf6f0;
+    --warm-white: #fffdf9;
+    --rose: #c4896f;
+    --rose-light: #e8c4b4;
+    --rose-dark: #9e5d44;
+    --gold: #c9a96e;
+    --gold-light: #e8d5b0;
+    --charcoal: #2a2118;
+    --charcoal-mid: #4a3a2e;
+    --charcoal-light: #7a6a5e;
+    --ribbon-bg: #2a2118;
+    --shadow: 0 20px 60px rgba(42,33,24,0.12);
+    --shadow-strong: 0 30px 80px rgba(42,33,24,0.22);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--cream);
+    color: var(--charcoal);
+    overflow-x: hidden;
+  }
+
+  /* ===== PAGES ===== */
+  .page { display: none; min-height: 100vh; }
+  .page.active { display: block; }
+
+  /* ===== NAV ===== */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+    background: rgba(250,246,240,0.96);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(201,169,110,0.2);
+    padding: 0 3rem;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 72px;
+    transition: all 0.3s ease;
+  }
+  nav.scrolled {
+    height: 60px;
+    box-shadow: 0 4px 30px rgba(42,33,24,0.08);
+  }
+
+  .nav-logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.6rem;
+    font-weight: 500;
+    color: var(--charcoal);
+    letter-spacing: 0.03em;
+    cursor: pointer;
+    line-height: 1.1;
+  }
+  .nav-logo span { color: var(--rose); font-style: italic; }
+
+  .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+  .nav-links a {
+    font-size: 0.82rem;
+    font-weight: 400;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--charcoal-mid);
+    text-decoration: none;
+    cursor: pointer;
+    transition: color 0.2s;
+    position: relative;
+  }
+  .nav-links a::after {
+    content: '';
+    position: absolute; bottom: -4px; left: 0; right: 0;
+    height: 1px; background: var(--rose);
+    transform: scaleX(0); transition: transform 0.3s ease;
+    transform-origin: left;
+  }
+  .nav-links a:hover, .nav-links a.active { color: var(--rose); }
+  .nav-links a:hover::after, .nav-links a.active::after { transform: scaleX(1); }
+
+  .nav-cta {
+    background: var(--charcoal);
+    color: var(--cream) !important;
+    padding: 0.55rem 1.4rem;
+    border-radius: 2px;
+    letter-spacing: 0.1em;
+    transition: background 0.2s !important;
+  }
+  .nav-cta::after { display: none !important; }
+  .nav-cta:hover { background: var(--rose-dark) !important; color: var(--cream) !important; }
+
+  .nav-hamburger {
+    display: none; flex-direction: column; gap: 5px; cursor: pointer;
+    background: none; border: none;
+  }
+  .nav-hamburger span {
+    display: block; width: 24px; height: 1.5px;
+    background: var(--charcoal); transition: all 0.3s;
+  }
+
+  /* Mobile nav */
+  .nav-mobile {
+    display: none; position: fixed; top: 72px; left: 0; right: 0;
+    background: var(--warm-white); z-index: 999;
+    padding: 1.5rem 2rem;
+    border-bottom: 1px solid var(--gold-light);
+    flex-direction: column; gap: 1.2rem;
+  }
+  .nav-mobile.open { display: flex; }
+  .nav-mobile a {
+    font-size: 0.85rem; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--charcoal-mid); text-decoration: none; cursor: pointer;
+    padding: 0.3rem 0;
+    transition: color 0.2s;
+  }
+  .nav-mobile a:hover { color: var(--rose); }
+
+  /* ===== HERO ===== */
+  .hero {
+    min-height: 100vh;
+    display: flex; align-items: center;
+    padding-top: 72px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-bg {
+    position: absolute; inset: 0;
+    background: linear-gradient(135deg, var(--cream) 0%, #f5ece0 50%, #ede0d0 100%);
+  }
+
+  .hero-decorations {
+    position: absolute; inset: 0; pointer-events: none;
+  }
+  .hero-circle-1 {
+    position: absolute; top: -8%; right: -5%;
+    width: 520px; height: 520px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(196,137,111,0.12) 0%, transparent 70%);
+  }
+  .hero-circle-2 {
+    position: absolute; bottom: 10%; left: -8%;
+    width: 380px; height: 380px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(201,169,110,0.1) 0%, transparent 70%);
+  }
+  .hero-line-1 {
+    position: absolute; top: 20%; right: 15%;
+    width: 1px; height: 200px;
+    background: linear-gradient(to bottom, transparent, rgba(201,169,110,0.3), transparent);
+  }
+
+  .hero-content {
+    position: relative; z-index: 1;
+    max-width: 1200px; margin: 0 auto;
+    padding: 0 3rem;
+    display: grid; grid-template-columns: 1fr 1fr;
+    align-items: center; gap: 4rem;
+  }
+
+  .hero-text { animation: fadeUp 1s ease both; }
+  .hero-eyebrow {
+    font-size: 0.75rem; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--rose); font-weight: 400;
+    display: flex; align-items: center; gap: 0.75rem;
+    margin-bottom: 1.5rem;
+  }
+  .hero-eyebrow::before {
+    content: ''; display: block; width: 32px; height: 1px; background: var(--rose);
+  }
+
+  .hero-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(3rem, 5.5vw, 5rem);
+    font-weight: 300;
+    line-height: 1.08;
+    color: var(--charcoal);
+    margin-bottom: 1.5rem;
+  }
+  .hero-title em {
+    font-style: italic; color: var(--rose);
+    font-weight: 300;
+  }
+
+  .hero-mission {
+    font-size: 1rem;
+    line-height: 1.75;
+    color: var(--charcoal-light);
+    max-width: 440px;
+    margin-bottom: 2.5rem;
+    font-weight: 300;
+  }
+
+  .hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; }
+
+  .btn-primary {
+    display: inline-flex; align-items: center; gap: 0.6rem;
+    background: var(--charcoal);
+    color: var(--cream);
+    padding: 0.85rem 2rem;
+    font-size: 0.8rem;
+    font-weight: 400;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    text-decoration: none;
+    cursor: pointer;
+    border: none;
+    border-radius: 2px;
+    transition: all 0.25s ease;
+  }
+  .btn-primary:hover { background: var(--rose-dark); transform: translateY(-1px); }
+  .btn-primary svg { width: 14px; height: 14px; }
+
+  .btn-secondary {
+    display: inline-flex; align-items: center; gap: 0.6rem;
+    background: transparent;
+    color: var(--charcoal);
+    padding: 0.85rem 2rem;
+    font-size: 0.8rem;
+    font-weight: 400;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    cursor: pointer;
+    border: 1px solid rgba(42,33,24,0.25);
+    border-radius: 2px;
+    transition: all 0.25s ease;
+  }
+  .btn-secondary:hover { border-color: var(--rose); color: var(--rose); }
+
+  .hero-visual {
+    animation: fadeUp 1s 0.2s ease both;
+    position: relative;
+  }
+  .hero-card {
+    background: var(--warm-white);
+    border-radius: 4px;
+    padding: 2.5rem;
+    box-shadow: var(--shadow-strong);
+    position: relative;
+  }
+  .hero-card-accent {
+    position: absolute; top: -12px; right: -12px;
+    width: 80px; height: 80px; border-radius: 50%;
+    background: var(--rose-light);
+    z-index: -1;
+  }
+  .hero-card-accent2 {
+    position: absolute; bottom: -16px; left: -16px;
+    width: 56px; height: 56px; border-radius: 50%;
+    background: var(--gold-light);
+    z-index: -1;
+  }
+
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    background: var(--rose);
+    color: white;
+    padding: 0.35rem 0.9rem;
+    border-radius: 2px;
+    font-size: 0.7rem;
+    font-weight: 400;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+  }
+
+  .hero-stats {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 1.5rem; margin-top: 1.5rem;
+  }
+  .stat {
+    text-align: center;
+    padding: 1.2rem;
+    background: var(--cream);
+    border-radius: 3px;
+  }
+  .stat-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2.4rem; font-weight: 300;
+    color: var(--charcoal); line-height: 1;
+    margin-bottom: 0.3rem;
+  }
+  .stat-label {
+    font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--charcoal-light);
+  }
+
+  .hero-cake-preview {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.4rem;
+    font-style: italic;
+    color: var(--charcoal-mid);
+    margin-bottom: 0.5rem;
+    font-weight: 400;
+  }
+  .hero-cake-sub {
+    font-size: 0.78rem;
+    color: var(--charcoal-light);
+    letter-spacing: 0.05em;
+    margin-bottom: 1rem;
+  }
+
+  /* ===== RIBBON SECTION ===== */
+  .ribbon-section {
+    background: var(--ribbon-bg);
+    padding: 5rem 0;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .ribbon-header {
+    text-align: center;
+    margin-bottom: 3rem;
+    padding: 0 2rem;
+  }
+  .ribbon-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2.5rem;
+    font-weight: 300;
+    color: var(--cream);
+    margin-bottom: 0.5rem;
+  }
+  .ribbon-subtitle {
+    color: rgba(250,246,240,0.5);
+    font-size: 0.82rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  /* Ribbon Controls */
+  .ribbon-controls {
+    display: flex; align-items: center; justify-content: center;
+    gap: 1rem; margin-bottom: 2rem;
+  }
+  .ribbon-arrow {
+    width: 44px; height: 44px; border-radius: 50%;
+    background: rgba(250,246,240,0.08);
+    border: 1px solid rgba(250,246,240,0.2);
+    color: var(--cream);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; transition: all 0.2s ease;
+    flex-shrink: 0;
+  }
+  .ribbon-arrow:hover {
+    background: var(--rose);
+    border-color: var(--rose);
+    transform: scale(1.05);
+  }
+  .ribbon-arrow svg { width: 18px; height: 18px; }
+
+  .ribbon-play-toggle {
+    width: 44px; height: 44px; border-radius: 50%;
+    background: var(--rose);
+    border: none;
+    color: white;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; transition: all 0.2s ease;
+  }
+  .ribbon-play-toggle:hover { background: var(--rose-dark); transform: scale(1.05); }
+  .ribbon-play-toggle svg { width: 16px; height: 16px; }
+
+  .ribbon-speed-label {
+    font-size: 0.72rem;
+    color: rgba(250,246,240,0.4);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  /* Ribbon Track */
+  .ribbon-track-wrapper {
+    position: relative;
+    overflow: hidden;
+    /* Edge fade */
+  }
+  .ribbon-track-wrapper::before,
+  .ribbon-track-wrapper::after {
+    content: '';
+    position: absolute; top: 0; bottom: 0; width: 120px; z-index: 10;
+    pointer-events: none;
+  }
+  .ribbon-track-wrapper::before {
+    left: 0;
+    background: linear-gradient(to right, var(--ribbon-bg), transparent);
+  }
+  .ribbon-track-wrapper::after {
+    right: 0;
+    background: linear-gradient(to left, var(--ribbon-bg), transparent);
+  }
+
+  .ribbon-track {
+    display: flex;
+    gap: 1.25rem;
+    padding: 1rem 1.5rem;
+    cursor: grab;
+    user-select: none;
+    will-change: transform;
+  }
+  .ribbon-track:active { cursor: grabbing; }
+  .ribbon-track.paused { /* auto-scroll paused via JS */ }
+
+  .cake-card {
+    flex-shrink: 0;
+    width: 200px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 4px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+  }
+  .cake-card:hover {
+    background: rgba(255,255,255,0.09);
+    border-color: rgba(196,137,111,0.4);
+    transform: translateY(-4px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+  }
+
+  .cake-thumb {
+    height: 160px;
+    background: linear-gradient(135deg, rgba(196,137,111,0.15) 0%, rgba(201,169,110,0.08) 100%);
+    display: flex; align-items: center; justify-content: center;
+    position: relative; overflow: hidden;
+  }
+  .cake-thumb img {
+    width: 100%; height: 100%; object-fit: cover; display: block;
+    transition: transform 0.3s ease;
+  }
+  .cake-card:hover .cake-thumb img { transform: scale(1.06); }
+
+  .cake-thumb-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(to bottom, transparent 60%, rgba(42,33,24,0.5));
+  }
+
+  .cake-card-body { padding: 1rem; }
+  .cake-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.05rem;
+    font-weight: 400;
+    color: var(--cream);
+    margin-bottom: 0.25rem;
+    line-height: 1.2;
+  }
+  .cake-desc-short {
+    font-size: 0.7rem;
+    color: rgba(250,246,240,0.45);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .cake-view-btn {
+    display: flex; align-items: center; gap: 0.4rem;
+    margin-top: 0.75rem;
+    font-size: 0.68rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--rose-light);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .cake-card:hover .cake-view-btn { opacity: 1; }
+
+  /* ===== CAKE MODAL ===== */
+  .cake-modal-overlay {
+    position: fixed; inset: 0; z-index: 2000;
+    background: rgba(20,14,8,0.85);
+    backdrop-filter: blur(8px);
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.3s ease;
+    padding: 1.5rem;
+  }
+  .cake-modal-overlay.open { opacity: 1; pointer-events: all; }
+
+  .cake-modal {
+    background: var(--warm-white);
+    border-radius: 6px;
+    max-width: 680px; width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    transform: scale(0.92) translateY(20px);
+    transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+    position: relative;
+  }
+  .cake-modal-overlay.open .cake-modal {
+    transform: scale(1) translateY(0);
+  }
+
+  .cake-modal-hero {
+    display: block;
+    position: relative;
+    width: 100%;
+  }
+  .cake-modal-emoji {
+    display: block;
+    width: 100%;
+  }
+  .cake-modal-emoji img { width: 100%; height: auto; display: block; }
+  .cake-modal-close {
+    position: absolute; top: 1rem; right: 1rem;
+    width: 36px; height: 36px; border-radius: 50%;
+    background: rgba(42,33,24,0.2);
+    border: none; cursor: pointer; color: var(--charcoal);
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.2s;
+  }
+  .cake-modal-close:hover { background: rgba(42,33,24,0.4); }
+  .cake-modal-close svg { width: 16px; height: 16px; }
+
+  /* Modal nav arrows */
+  .cake-modal-nav {
+    position: absolute; top: 50%; transform: translateY(-50%);
+    width: 40px; height: 40px; border-radius: 50%;
+    background: rgba(250,246,240,0.9);
+    border: none; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s; box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  }
+  .cake-modal-nav:hover { background: var(--rose); color: white; transform: translateY(-50%) scale(1.08); }
+  .cake-modal-nav svg { width: 16px; height: 16px; }
+  .cake-modal-prev { left: 1rem; }
+  .cake-modal-next { right: 1rem; }
+
+  .cake-modal-body { padding: 2rem 2.5rem 2.5rem; }
+  .cake-modal-tag {
+    display: inline-block;
+    background: var(--rose-light);
+    color: var(--rose-dark);
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 0.3rem 0.8rem;
+    border-radius: 2px;
+    margin-bottom: 1rem;
+  }
+  .cake-modal-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2.2rem;
+    font-weight: 300;
+    color: var(--charcoal);
+    margin-bottom: 0.75rem;
+    line-height: 1.1;
+  }
+  .cake-modal-desc {
+    color: var(--charcoal-light);
+    font-size: 0.95rem;
+    line-height: 1.7;
+    margin-bottom: 1.5rem;
+  }
+  .cake-modal-details {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 1rem; margin-bottom: 1.75rem;
+    padding: 1.25rem;
+    background: var(--cream);
+    border-radius: 4px;
+  }
+  .cake-detail { display: flex; flex-direction: column; gap: 0.2rem; }
+  .cake-detail-label {
+    font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.1em;
+    color: var(--charcoal-light);
+  }
+  .cake-detail-value {
+    font-size: 0.9rem; color: var(--charcoal); font-weight: 400;
+  }
+  .cake-modal-cta {
+    display: flex; gap: 1rem;
+  }
+
+  /* ===== ABOUT STRIP ===== */
+  .about-strip {
+    padding: 6rem 3rem;
+    max-width: 1200px; margin: 0 auto;
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 5rem; align-items: center;
+  }
+  .about-text .section-eyebrow {
+    font-size: 0.72rem; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--rose); display: flex; align-items: center; gap: 0.75rem;
+    margin-bottom: 1.2rem;
+  }
+  .about-text .section-eyebrow::before {
+    content: ''; width: 28px; height: 1px; background: var(--rose);
+  }
+  .about-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2rem, 3.5vw, 3rem);
+    font-weight: 300; line-height: 1.15;
+    color: var(--charcoal); margin-bottom: 1.25rem;
+  }
+  .about-body {
+    color: var(--charcoal-light);
+    font-size: 0.97rem;
+    line-height: 1.8; font-weight: 300;
+    margin-bottom: 1.75rem;
+  }
+  .about-pillars {
+    display: flex; flex-direction: column; gap: 1rem;
+  }
+  .about-pillar {
+    display: flex; align-items: flex-start; gap: 1rem;
+    padding: 1rem 1.25rem;
+    background: var(--warm-white);
+    border-left: 2px solid var(--gold);
+    border-radius: 0 4px 4px 0;
+  }
+  .about-pillar-icon { font-size: 1.4rem; flex-shrink: 0; margin-top: 0.1rem; }
+  .about-pillar-title {
+    font-size: 0.85rem; font-weight: 500;
+    color: var(--charcoal); margin-bottom: 0.2rem;
+  }
+  .about-pillar-text { font-size: 0.8rem; color: var(--charcoal-light); line-height: 1.5; }
+
+  .about-visual {
+    display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: auto auto;
+    gap: 1rem;
+  }
+  .about-img-card {
+    border-radius: 4px;
+    overflow: hidden;
+    position: relative;
+  }
+  .about-img-card.tall { grid-row: span 2; }
+  .about-img-placeholder {
+    width: 100%; height: 100%;
+    min-height: 140px;
+    background: linear-gradient(135deg, var(--rose-light), var(--gold-light));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 3rem;
+  }
+  .about-img-card.tall .about-img-placeholder { min-height: 300px; }
+
+  /* ===== SECTION HEADER ===== */
+  .section-header {
+    text-align: center; padding: 5rem 2rem 3rem;
+  }
+  .section-eyebrow-center {
+    font-size: 0.72rem; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--rose); margin-bottom: 1rem;
+    display: flex; align-items: center; justify-content: center; gap: 0.75rem;
+  }
+  .section-eyebrow-center::before, .section-eyebrow-center::after {
+    content: ''; flex: 1; max-width: 60px; height: 1px; background: var(--rose);
+  }
+  .section-title-center {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2rem, 4vw, 3.2rem);
+    font-weight: 300; color: var(--charcoal);
+    margin-bottom: 0.75rem; line-height: 1.15;
+  }
+  .section-sub {
+    color: var(--charcoal-light);
+    font-size: 0.9rem; max-width: 520px; margin: 0 auto;
+    line-height: 1.7; font-weight: 300;
+  }
+
+  /* ===== GALLERY PAGE ===== */
+  .gallery-filter {
+    display: flex; justify-content: center; flex-wrap: wrap; gap: 0.5rem;
+    padding: 0 2rem 3rem;
+  }
+  .filter-btn {
+    padding: 0.45rem 1.2rem;
+    background: transparent;
+    border: 1px solid rgba(42,33,24,0.18);
+    border-radius: 2px;
+    font-size: 0.75rem;
+    font-weight: 400;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--charcoal-mid);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .filter-btn:hover, .filter-btn.active {
+    background: var(--charcoal);
+    border-color: var(--charcoal);
+    color: var(--cream);
+  }
+
+  .gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1.25rem;
+    padding: 0 3rem 5rem;
+    max-width: 1200px; margin: 0 auto;
+  }
+
+  .gallery-item {
+    border-radius: 4px;
+    overflow: hidden;
+    cursor: pointer;
+    position: relative;
+    aspect-ratio: 4/3;
+    background: linear-gradient(135deg, var(--rose-light), var(--gold-light));
+    transition: all 0.3s ease;
+  }
+  .gallery-item:hover { transform: translateY(-4px); box-shadow: var(--shadow); }
+  .gallery-item-inner {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    flex-direction: column; gap: 0.5rem;
+  }
+  .gallery-emoji { display: none; }
+  .gallery-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(to top, rgba(42,33,24,0.75) 0%, transparent 60%);
+    opacity: 0; transition: opacity 0.3s;
+    display: flex; align-items: flex-end;
+    padding: 1.25rem;
+  }
+  .gallery-item:hover .gallery-overlay { opacity: 1; }
+  .gallery-item-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.3rem; color: white; font-weight: 300;
+  }
+
+  /* ===== ORDER PAGE ===== */
+  .order-page { padding-top: 72px; background: var(--cream); }
+  .order-hero {
+    background: var(--charcoal);
+    padding: 4rem 3rem;
+    text-align: center;
+  }
+  .order-hero-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    font-weight: 300; color: var(--cream);
+    margin-bottom: 0.75rem;
+  }
+  .order-hero-sub { color: rgba(250,246,240,0.6); font-size: 0.9rem; font-weight: 300; }
+
+  .order-container {
+    max-width: 800px; margin: 0 auto;
+    padding: 4rem 2rem 6rem;
+  }
+
+  .order-notice {
+    background: rgba(196,137,111,0.12);
+    border-left: 3px solid var(--rose);
+    padding: 1rem 1.5rem;
+    border-radius: 0 4px 4px 0;
+    margin-bottom: 2.5rem;
+    font-size: 0.87rem;
+    color: var(--charcoal-mid);
+    line-height: 1.6;
+  }
+  .order-notice strong { color: var(--rose-dark); }
+
+  .order-form {
+    background: var(--warm-white);
+    border-radius: 6px;
+    padding: 2.5rem;
+    box-shadow: var(--shadow);
+  }
+
+  .form-section { margin-bottom: 2rem; }
+  .form-section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.3rem; color: var(--charcoal);
+    margin-bottom: 1.25rem;
+    padding-bottom: 0.6rem;
+    border-bottom: 1px solid rgba(42,33,24,0.08);
+    font-weight: 400;
+    display: flex; align-items: center; gap: 0.6rem;
+  }
+
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
+  .form-group { display: flex; flex-direction: column; gap: 0.4rem; margin-bottom: 1.25rem; }
+  .form-group:last-child { margin-bottom: 0; }
+  .form-label {
+    font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em;
+    color: var(--charcoal-mid); font-weight: 400;
+  }
+  .form-input, .form-select, .form-textarea {
+    padding: 0.75rem 1rem;
+    border: 1px solid rgba(42,33,24,0.15);
+    border-radius: 3px;
+    background: var(--cream);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    color: var(--charcoal);
+    transition: border-color 0.2s, box-shadow 0.2s;
+    outline: none;
+    appearance: none;
+  }
+  .form-input:focus, .form-select:focus, .form-textarea:focus {
+    border-color: var(--rose);
+    box-shadow: 0 0 0 3px rgba(196,137,111,0.12);
+  }
+  .form-textarea { resize: vertical; min-height: 100px; }
+  .form-select { cursor: pointer; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%234a3a2e' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 1rem center; padding-right: 2.5rem; }
+
+  .cake-picker-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem;
+    margin-bottom: 1.25rem;
+  }
+  .cake-pick-btn {
+    padding: 0.6rem 0.5rem;
+    border: 1px solid rgba(42,33,24,0.12);
+    border-radius: 3px;
+    background: var(--cream);
+    cursor: pointer; text-align: center;
+    transition: all 0.2s; font-size: 0.75rem;
+    color: var(--charcoal-mid);
+    line-height: 1.3;
+  }
+  .cake-pick-btn span { display: block; font-size: 1.3rem; margin-bottom: 0.2rem; }
+  .cake-pick-btn:hover { border-color: var(--rose); color: var(--rose); background: rgba(196,137,111,0.06); }
+  .cake-pick-btn.selected { border-color: var(--rose); background: rgba(196,137,111,0.1); color: var(--rose-dark); font-weight: 500; }
+
+  .checkbox-group { display: flex; flex-direction: column; gap: 0.6rem; }
+  .checkbox-item { display: flex; align-items: center; gap: 0.65rem; cursor: pointer; }
+  .checkbox-item input { width: 16px; height: 16px; accent-color: var(--rose); cursor: pointer; }
+  .checkbox-item label { font-size: 0.87rem; color: var(--charcoal-mid); cursor: pointer; }
+
+  .form-submit {
+    width: 100%;
+    padding: 1rem;
+    background: var(--charcoal);
+    color: var(--cream);
+    border: none; border-radius: 3px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 400;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.25s;
+    margin-top: 0.5rem;
+  }
+  .form-submit:hover { background: var(--rose-dark); }
+
+  /* ===== REVIEWS ===== */
+  .reviews-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+    padding: 0 3rem 5rem;
+    max-width: 1200px; margin: 0 auto;
+  }
+  .review-card {
+    background: var(--warm-white);
+    border-radius: 4px;
+    padding: 1.75rem;
+    box-shadow: 0 4px 20px rgba(42,33,24,0.06);
+    position: relative;
+  }
+  .review-quote {
+    position: absolute; top: 1.25rem; right: 1.5rem;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 4rem;
+    color: var(--rose-light);
+    line-height: 1;
+    font-weight: 300;
+  }
+  .review-stars { color: var(--gold); margin-bottom: 1rem; font-size: 0.9rem; }
+  .review-text {
+    font-size: 0.92rem; color: var(--charcoal-mid);
+    line-height: 1.7; font-weight: 300;
+    margin-bottom: 1.25rem;
+    font-style: italic;
+  }
+  .review-author { display: flex; align-items: center; gap: 0.75rem; }
+  .review-avatar {
+    width: 38px; height: 38px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--rose-light), var(--gold-light));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1rem;
+  }
+  .review-name { font-size: 0.85rem; font-weight: 500; color: var(--charcoal); }
+  .review-date { font-size: 0.73rem; color: var(--charcoal-light); }
+
+  /* Leave a review */
+  .review-form-wrap {
+    max-width: 600px; margin: 0 auto;
+    padding: 0 2rem 5rem;
+  }
+  .review-form {
+    background: var(--warm-white);
+    border-radius: 6px;
+    padding: 2rem 2.5rem;
+    box-shadow: var(--shadow);
+  }
+  .star-select { display: flex; gap: 0.5rem; margin-bottom: 1rem; }
+  .star-btn {
+    font-size: 1.4rem; cursor: pointer; background: none; border: none;
+    color: #d0c4b0;
+    transition: color 0.15s, transform 0.15s;
+  }
+  .star-btn.active, .star-btn:hover { color: var(--gold); transform: scale(1.1); }
+
+  /* ===== CONTACT ===== */
+  .contact-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 4rem; max-width: 1000px; margin: 0 auto;
+    padding: 0 3rem 6rem;
+    align-items: start;
+  }
+  .contact-info-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.8rem; font-weight: 300; color: var(--charcoal);
+    margin-bottom: 1rem;
+  }
+  .contact-info-body {
+    color: var(--charcoal-light); font-size: 0.9rem; line-height: 1.7;
+    font-weight: 300; margin-bottom: 2rem;
+  }
+  .contact-details { display: flex; flex-direction: column; gap: 1.25rem; }
+  .contact-item {
+    display: flex; align-items: flex-start; gap: 1rem;
+    padding: 1rem 1.25rem;
+    background: var(--warm-white);
+    border-radius: 4px;
+  }
+  .contact-icon {
+    width: 38px; height: 38px; border-radius: 50%;
+    background: var(--rose-light);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1rem; flex-shrink: 0;
+  }
+  .contact-item-label {
+    font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em;
+    color: var(--charcoal-light); margin-bottom: 0.15rem;
+  }
+  .contact-item-value { font-size: 0.9rem; color: var(--charcoal); }
+
+  .contact-form-box {
+    background: var(--warm-white);
+    border-radius: 6px;
+    padding: 2rem 2.5rem;
+    box-shadow: var(--shadow);
+  }
+
+  /* ===== FOOTER ===== */
+  footer {
+    background: var(--charcoal);
+    padding: 4rem 3rem 2.5rem;
+    color: rgba(250,246,240,0.6);
+  }
+  .footer-inner {
+    max-width: 1200px; margin: 0 auto;
+    display: grid; grid-template-columns: 1.5fr 1fr 1fr;
+    gap: 3rem; margin-bottom: 3rem;
+  }
+  .footer-brand-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.6rem; font-weight: 300; color: var(--cream);
+    margin-bottom: 0.75rem;
+  }
+  .footer-brand-name span { color: var(--rose); font-style: italic; }
+  .footer-brand-text { font-size: 0.85rem; line-height: 1.7; font-weight: 300; max-width: 280px; }
+  .footer-col-title {
+    font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--cream); margin-bottom: 1.25rem; font-weight: 400;
+  }
+  .footer-links { display: flex; flex-direction: column; gap: 0.65rem; }
+  .footer-links a {
+    font-size: 0.85rem; color: rgba(250,246,240,0.55);
+    text-decoration: none; cursor: pointer;
+    transition: color 0.2s;
+  }
+  .footer-links a:hover { color: var(--rose-light); }
+  .footer-bottom {
+    border-top: 1px solid rgba(250,246,240,0.08);
+    padding-top: 2rem;
+    display: flex; justify-content: space-between; align-items: center;
+    flex-wrap: wrap; gap: 1rem;
+    font-size: 0.78rem;
+  }
+  .footer-heart { color: var(--rose); }
+
+  /* ===== ANIMATIONS ===== */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(28px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes shimmer {
+    0% { opacity: 0.4; }
+    50% { opacity: 0.7; }
+    100% { opacity: 0.4; }
+  }
+
+  /* ===== SUCCESS MSG ===== */
+  .success-toast {
+    position: fixed; bottom: 2rem; right: 2rem; z-index: 3000;
+    background: var(--charcoal);
+    color: var(--cream);
+    padding: 1rem 1.75rem;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    box-shadow: var(--shadow-strong);
+    display: flex; align-items: center; gap: 0.75rem;
+    transform: translateY(80px); opacity: 0;
+    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  .success-toast.show { transform: translateY(0); opacity: 1; }
+  .success-toast-icon { color: #6ec97a; font-size: 1.1rem; }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 900px) {
+    nav { padding: 0 1.5rem; }
+    .nav-links { display: none; }
+    .nav-hamburger { display: flex; }
+    .hero-content { grid-template-columns: 1fr; gap: 2.5rem; padding: 2rem 1.5rem; }
+    .hero-visual { display: none; }
+    .about-strip { grid-template-columns: 1fr; padding: 4rem 1.5rem; gap: 2.5rem; }
+    .about-visual { display: none; }
+    .gallery-grid { padding: 0 1.5rem 4rem; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
+    .order-container { padding: 3rem 1.5rem 5rem; }
+    .order-form { padding: 1.75rem; }
+    .form-row { grid-template-columns: 1fr; }
+    .cake-picker-grid { grid-template-columns: repeat(2, 1fr); }
+    .reviews-grid { padding: 0 1.5rem 4rem; }
+    .contact-grid { grid-template-columns: 1fr; padding: 0 1.5rem 5rem; }
+    .footer-inner { grid-template-columns: 1fr 1fr; }
+    .gallery-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }
+  }
+  @media (max-width: 560px) {
+    .footer-inner { grid-template-columns: 1fr; }
+    .ribbon-controls { gap: 0.5rem; }
+    .cake-modal-body { padding: 1.5rem 1.5rem 2rem; }
+    .cake-modal-title { font-size: 1.7rem; }
+    .cake-modal-details { grid-template-columns: 1fr; }
+    .cake-modal-cta { flex-direction: column; }
+    .hero-title { font-size: 2.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ====== NAV ====== -->
+<nav id="mainNav">
+  <div class="nav-logo" onclick="showPage('home')">Sweet <span>Mishpuchah</span></div>
+  <ul class="nav-links">
+    <li><a onclick="showPage('home')" id="nav-home">Home</a></li>
+    <li><a onclick="showPage('gallery')" id="nav-gallery">Gallery</a></li>
+    <li><a onclick="showPage('order')" id="nav-order">Order</a></li>
+    <li><a onclick="showPage('reviews')" id="nav-reviews">Reviews</a></li>
+    <li><a onclick="showPage('contact')" id="nav-contact">Contact</a></li>
+    <li><a onclick="showPage('order')" class="nav-cta">Order Now</a></li>
+  </ul>
+  <button class="nav-hamburger" onclick="toggleMobileNav()" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<div class="nav-mobile" id="mobileNav">
+  <a onclick="showPage('home');closeMobileNav()">Home</a>
+  <a onclick="showPage('gallery');closeMobileNav()">Gallery</a>
+  <a onclick="showPage('order');closeMobileNav()">Order</a>
+  <a onclick="showPage('reviews');closeMobileNav()">Reviews</a>
+  <a onclick="showPage('contact');closeMobileNav()">Contact</a>
+</div>
+
+<!-- ====== HOME PAGE ====== -->
+<div class="page active" id="page-home">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-decorations">
+      <div class="hero-circle-1"></div>
+      <div class="hero-circle-2"></div>
+      <div class="hero-line-1"></div>
+    </div>
+    <div class="hero-content">
+      <div class="hero-text">
+        <div class="hero-eyebrow">Family-Owned Artisan Bakery</div>
+        <h1 class="hero-title">
+          Baked with <em>love,</em><br>shared with <em>family.</em>
+        </h1>
+        <p class="hero-mission">We are a small family-owned, authentic bakery striving to provide the most delicious and eye-pleasing cakes and pastries that will satisfy your every craving.</p>
+        <div class="hero-actions">
+          <button class="btn-primary" onclick="showPage('order')">
+            Place an Order
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+          </button>
+          <button class="btn-secondary" onclick="showPage('gallery')">Browse Menu</button>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <div class="hero-card">
+          <div class="hero-card-accent"></div>
+          <div class="hero-card-accent2"></div>
+          <div class="hero-badge">✨ Freshly Baked to Order</div>
+          <div class="hero-cake-preview">Napoleon Cake</div>
+          <div class="hero-cake-sub">Flaky layers with vanilla cream</div>
+          <div class="hero-stats">
+            <div class="stat">
+              <div class="stat-num">28+</div>
+              <div class="stat-label">Cake Varieties</div>
+            </div>
+            <div class="stat">
+              <div class="stat-num">100%</div>
+              <div class="stat-label">Homemade</div>
+            </div>
+            <div class="stat">
+              <div class="stat-num">❤️</div>
+              <div class="stat-label">Family Recipe</div>
+            </div>
+            <div class="stat">
+              <div class="stat-num">🎂</div>
+              <div class="stat-label">Custom Orders</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- INTERACTIVE RIBBON MENU -->
+  <section class="ribbon-section">
+    <div class="ribbon-header">
+      <div class="ribbon-title">Our Menu</div>
+      <div class="ribbon-subtitle">Click any cake to explore · Use arrows or drag to browse</div>
+    </div>
+
+    <div class="ribbon-controls">
+      <button class="ribbon-arrow" id="ribbonLeft" aria-label="Scroll left">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+      </button>
+      <span class="ribbon-speed-label">Auto</span>
+      <button class="ribbon-play-toggle" id="ribbonPlayBtn" aria-label="Play/pause">
+        <svg id="ribbonPlayIcon" fill="currentColor" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+      </button>
+      <span class="ribbon-speed-label">Scroll</span>
+      <button class="ribbon-arrow" id="ribbonRight" aria-label="Scroll right">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+      </button>
+    </div>
+
+    <div class="ribbon-track-wrapper">
+      <div class="ribbon-track" id="ribbonTrack"></div>
+    </div>
+  </section>
+
+  <!-- ABOUT STRIP -->
+  <section>
+    <div class="about-strip">
+      <div class="about-text">
+        <div class="section-eyebrow">Our Story</div>
+        <h2 class="about-title">A family tradition, baked into every layer.</h2>
+        <p class="about-body">Mishpuchah — the Yiddish word for family — is at the heart of everything we do. Every cake that leaves our kitchen carries generations of love, authentic recipes, and the warmth of a home kitchen. We don't cut corners, we don't use shortcuts, and we never compromise on quality.</p>
+        <div class="about-pillars">
+          <div class="about-pillar">
+            <div class="about-pillar-icon">🏡</div>
+            <div>
+              <div class="about-pillar-title">Homemade & Authentic</div>
+              <div class="about-pillar-text">Every recipe is made from scratch using traditional family methods, passed down through generations.</div>
+            </div>
+          </div>
+          <div class="about-pillar">
+            <div class="about-pillar-icon">🌿</div>
+            <div>
+              <div class="about-pillar-title">Quality Ingredients</div>
+              <div class="about-pillar-text">We source only the finest ingredients — real cream, fresh fruit, pure vanilla — nothing artificial.</div>
+            </div>
+          </div>
+          <div class="about-pillar">
+            <div class="about-pillar-icon">🎨</div>
+            <div>
+              <div class="about-pillar-title">Beautifully Crafted</div>
+              <div class="about-pillar-text">Every cake is an edible work of art, designed to look as incredible as it tastes.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="about-visual">
+        <div class="about-img-card tall">
+          <div class="about-img-placeholder">🎂</div>
+        </div>
+        <div class="about-img-card">
+          <div class="about-img-placeholder" style="font-size:2.2rem;">🍰</div>
+        </div>
+        <div class="about-img-card">
+          <div class="about-img-placeholder" style="font-size:2.2rem;">🧁</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div><!-- /home -->
+
+<!-- ====== GALLERY PAGE ====== -->
+<div class="page" id="page-gallery">
+  <div style="padding-top: 72px;">
+    <div class="section-header">
+      <div class="section-eyebrow-center">Our Creations</div>
+      <h2 class="section-title-center">The Full Collection</h2>
+      <p class="section-sub">Every cake is baked fresh to order. Browse our full selection below — click any item for details.</p>
+    </div>
+    <div class="gallery-filter" id="galleryFilter"></div>
+    <div class="gallery-grid" id="galleryGrid"></div>
+  </div>
+</div>
+
+<!-- ====== ORDER PAGE ====== -->
+<div class="page" id="page-order">
+  <div class="order-page">
+    <div class="order-hero">
+      <div class="order-hero-title">Place Your Order</div>
+      <div class="order-hero-sub">Schedule Your Order Here</div>
+    </div>
+    <div class="order-container">
+      <div class="order-notice">
+        <strong>⏰ Please Note:</strong> You cannot pick up your order later than 1 hour before your event. We recommend ordering at least 3–5 days in advance for custom cakes.
+      </div>
+      <div class="order-form">
+        <!-- Contact -->
+        <div class="form-section">
+          <div class="form-section-title">👤 Your Details</div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">First Name *</label>
+              <input type="text" class="form-input" placeholder="Your first name">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Last Name *</label>
+              <input type="text" class="form-input" placeholder="Your last name">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Phone *</label>
+              <input type="tel" class="form-input" placeholder="(555) 000-0000">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Email *</label>
+              <input type="email" class="form-input" placeholder="you@example.com">
+            </div>
+          </div>
+        </div>
+
+        <!-- Cake Selection -->
+        <div class="form-section">
+          <div class="form-section-title">🎂 Choose Your Cake</div>
+          <div class="cake-picker-grid" id="cakePicker"></div>
+          <div class="form-group">
+            <label class="form-label">Or Describe a Custom Request</label>
+            <textarea class="form-textarea" placeholder="E.g., 'Napoleon cake with strawberries, feeds 15 people, blue floral decoration...'"></textarea>
+          </div>
+        </div>
+
+        <!-- Order Details -->
+        <div class="form-section">
+          <div class="form-section-title">📋 Order Details</div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Serves How Many? *</label>
+              <select class="form-select">
+                <option value="">Select size</option>
+                <option>6–8 people</option>
+                <option>10–12 people</option>
+                <option>15–20 people</option>
+                <option>25–30 people</option>
+                <option>30+ people</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Occasion</label>
+              <select class="form-select">
+                <option value="">Select occasion</option>
+                <option>Birthday</option>
+                <option>Anniversary</option>
+                <option>Wedding</option>
+                <option>Holiday</option>
+                <option>Corporate</option>
+                <option>Just Because 🎉</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Add-ons & Special Requests</label>
+            <div class="checkbox-group">
+              <label class="checkbox-item"><input type="checkbox"> <label>Custom inscription / message on cake</label></label>
+              <label class="checkbox-item"><input type="checkbox"> <label>Delivery (if available in your area)</label></label>
+              <label class="checkbox-item"><input type="checkbox"> <label>Allergy accommodations (please describe below)</label></label>
+              <label class="checkbox-item"><input type="checkbox"> <label>Egg-free / Dairy-free version (where available)</label></label>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Additional Notes</label>
+            <textarea class="form-textarea" placeholder="Allergies, dietary needs, delivery address, inscription text..."></textarea>
+          </div>
+        </div>
+
+        <!-- Pickup -->
+        <div class="form-section">
+          <div class="form-section-title">📅 Pickup Schedule</div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Pickup / Event Date *</label>
+              <input type="date" class="form-input">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Preferred Pickup Time *</label>
+              <input type="time" class="form-input">
+            </div>
+          </div>
+        </div>
+
+        <button class="form-submit" onclick="submitOrder()">Submit Order Request →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ====== REVIEWS PAGE ====== -->
+<div class="page" id="page-reviews">
+  <div style="padding-top: 72px;">
+    <div class="section-header">
+      <div class="section-eyebrow-center">Customer Love</div>
+      <h2 class="section-title-center">What Our Family Says</h2>
+      <p class="section-sub">Every review is a story of a moment made sweeter. We're grateful for every one.</p>
+    </div>
+    <div class="reviews-grid" id="reviewsGrid"></div>
+    <div class="review-form-wrap">
+      <div class="section-header" style="padding-top: 1rem; padding-bottom: 1.5rem;">
+        <div class="section-eyebrow-center">Share Your Experience</div>
+        <h3 class="section-title-center" style="font-size:1.8rem;">Leave a Review</h3>
+      </div>
+      <div class="review-form">
+        <div class="form-group">
+          <label class="form-label">Your Name</label>
+          <input type="text" class="form-input" placeholder="Your name" id="reviewName">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Rating</label>
+          <div class="star-select" id="starSelect">
+            <button class="star-btn" data-star="1">★</button>
+            <button class="star-btn" data-star="2">★</button>
+            <button class="star-btn" data-star="3">★</button>
+            <button class="star-btn" data-star="4">★</button>
+            <button class="star-btn" data-star="5">★</button>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Your Review</label>
+          <textarea class="form-textarea" placeholder="Tell us about your experience…" id="reviewText"></textarea>
+        </div>
+        <button class="form-submit" onclick="submitReview()">Submit Review →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ====== CONTACT PAGE ====== -->
+<div class="page" id="page-contact">
+  <div style="padding-top: 72px;">
+    <div class="section-header">
+      <div class="section-eyebrow-center">Get In Touch</div>
+      <h2 class="section-title-center">We'd Love to Hear from You</h2>
+      <p class="section-sub">Have a question? Curious about a custom order? We're just a message away.</p>
+    </div>
+    <div class="contact-grid">
+      <div>
+        <div class="contact-info-title">Reach Out Anytime</div>
+        <p class="contact-info-body">We're a small family business and we personally respond to every message. Whether you have a question about our menu, want to request a custom cake, or just want to say hi — don't hesitate to reach out.</p>
+        <div class="contact-details">
+          <div class="contact-item">
+            <div class="contact-icon">📱</div>
+            <div>
+              <div class="contact-item-label">Phone / Text</div>
+              <div class="contact-item-value">Available on request</div>
+            </div>
+          </div>
+          <div class="contact-item">
+            <div class="contact-icon">📧</div>
+            <div>
+              <div class="contact-item-label">Email</div>
+              <div class="contact-item-value">hello@sweetmishpuchah.com</div>
+            </div>
+          </div>
+          <div class="contact-item">
+            <div class="contact-icon">⏰</div>
+            <div>
+              <div class="contact-item-label">Response Time</div>
+              <div class="contact-item-value">Within 24 hours</div>
+            </div>
+          </div>
+          <div class="contact-item">
+            <div class="contact-icon">📦</div>
+            <div>
+              <div class="contact-item-label">Order Lead Time</div>
+              <div class="contact-item-value">3–5 days recommended</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="contact-form-box">
+        <div class="form-group">
+          <label class="form-label">Your Name</label>
+          <input type="text" class="form-input" placeholder="Your full name">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Email</label>
+          <input type="email" class="form-input" placeholder="you@example.com">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Subject</label>
+          <select class="form-select">
+            <option>General Inquiry</option>
+            <option>Custom Order Question</option>
+            <option>Order Status</option>
+            <option>Feedback</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Message</label>
+          <textarea class="form-textarea" style="min-height:130px" placeholder="Write your message here…"></textarea>
+        </div>
+        <button class="form-submit" onclick="submitContact()">Send Message →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ====== FOOTER ====== -->
+<footer>
+  <div class="footer-inner">
+    <div>
+      <div class="footer-brand-name">Sweet <span>Mishpuchah</span></div>
+      <p class="footer-brand-text">A small family-owned authentic bakery striving to provide the most delicious and eye-pleasing cakes and pastries that satisfy your every craving.</p>
+    </div>
+    <div>
+      <div class="footer-col-title">Navigate</div>
+      <div class="footer-links">
+        <a onclick="showPage('home')">Home</a>
+        <a onclick="showPage('gallery')">Gallery</a>
+        <a onclick="showPage('order')">Order Now</a>
+        <a onclick="showPage('reviews')">Reviews</a>
+        <a onclick="showPage('contact')">Contact</a>
+      </div>
+    </div>
+    <div>
+      <div class="footer-col-title">Our Cakes</div>
+      <div class="footer-links">
+        <a onclick="showPage('gallery')">Napoleon</a>
+        <a onclick="showPage('gallery')">Medovik</a>
+        <a onclick="showPage('gallery')">Pavlova</a>
+        <a onclick="showPage('gallery')">Cheesecake</a>
+        <a onclick="showPage('gallery')">Milky Girl</a>
+        <a onclick="showPage('gallery')">View All →</a>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div>© 2024 Sweet Mishpuchah. Made with <span class="footer-heart">♥</span> by family, for family.</div>
+    <div>All orders are baked fresh to order.</div>
+  </div>
+</footer>
+
+<!-- ====== CAKE MODAL ====== -->
+<div class="cake-modal-overlay" id="cakeModalOverlay" onclick="closeCakeModal(event)">
+  <div class="cake-modal" id="cakeModal">
+    <div class="cake-modal-hero" id="cakeModalHero">
+      <button class="cake-modal-nav cake-modal-prev" onclick="modalNav(-1)" aria-label="Previous cake">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+      </button>
+      <div class="cake-modal-emoji" id="cakeModalEmoji"></div>
+      <button class="cake-modal-close" onclick="closeCakeModalDirect()" aria-label="Close">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
+      <button class="cake-modal-nav cake-modal-next" onclick="modalNav(1)" aria-label="Next cake">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+      </button>
+    </div>
+    <div class="cake-modal-body">
+      <div class="cake-modal-tag" id="cakeModalTag">Classic</div>
+      <h2 class="cake-modal-title" id="cakeModalTitle">Cake Name</h2>
+      <p class="cake-modal-desc" id="cakeModalDesc">Description here.</p>
+      <div class="cake-modal-details">
+        <div class="cake-detail">
+          <div class="cake-detail-label">Available Sizes</div>
+          <div class="cake-detail-value" id="cakeModalSize">6–30+ servings</div>
+        </div>
+        <div class="cake-detail">
+          <div class="cake-detail-label">Category</div>
+          <div class="cake-detail-value" id="cakeModalCat">Classic</div>
+        </div>
+        <div class="cake-detail">
+          <div class="cake-detail-label">Lead Time</div>
+          <div class="cake-detail-value">3–5 days</div>
+        </div>
+        <div class="cake-detail">
+          <div class="cake-detail-label">Custom Available</div>
+          <div class="cake-detail-value">Yes ✓</div>
+        </div>
+      </div>
+      <div class="cake-modal-cta">
+        <button class="btn-primary" onclick="orderThisCake()">Order This Cake</button>
+        <button class="btn-secondary" onclick="closeCakeModalDirect()">Keep Browsing</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ====== SUCCESS TOAST ====== -->
+<div class="success-toast" id="successToast">
+  <span class="success-toast-icon">✓</span>
+  <span id="successToastMsg">Your request has been submitted!</span>
+</div>
+
+<script>
+// ============================================================
+// DATA
+// ============================================================
+const CAKES = [
+  { id: 0,  name: "Medovik",       image: "https://i.imgur.com/Q62En7b.jpeg", category: "Classic",    tag: "Best Seller",    desc: "A beloved Russian honey layer cake with thin, crispy honey-infused layers and velvety sour cream filling. Each bite melts away into layers of sweet nostalgia.", size: "6–25 servings" },
+  { id: 1,  name: "Milky Girl",    image: "https://i.imgur.com/JQ2VrsG.jpeg", category: "Classic",    tag: "Fan Favorite",   desc: "Ultra-thin, delicate crepes made with condensed milk, layered with clouds of whipped cream. Light, elegant, and endlessly satisfying.", size: "8–20 servings" },
+  { id: 2,  name: "Napoleon",      image: "https://i.imgur.com/gKg1nF7.jpeg", category: "Classic",    tag: "Signature",      desc: "The iconic French-Russian layered mille-feuille with impossibly flaky pastry and rich vanilla custard cream. A showstopper at any table.", size: "10–30+ servings" },
+  { id: 3,  name: "Kievsky",       image: "https://i.imgur.com/yfmbrjQ.jpeg", category: "Nut",        tag: "Classic",        desc: "A legendary Ukrainian masterpiece — crisp meringue cake with roasted hazelnuts and walnuts, bound together with a rich buttercream. Complex, elegant, unforgettable.", size: "8–20 servings" },
+  { id: 4,  name: "Sweet Fantasy", image: "https://i.imgur.com/FFYsxQ1.jpeg", category: "Specialty",  tag: "Popular",        desc: "Our signature creation — a dreamy mousse cake with layers of light sponge, fruit compote, and velvet cream. Every bite is a fantasy.", size: "6–18 servings" },
+  { id: 5,  name: "Lemon",         image: "https://i.imgur.com/wSOuJb4.jpeg", category: "Fruit",      tag: "Refreshing",     desc: "Bright, zesty lemon curd layered between cloud-soft sponge and whipped cream. The perfect balance of tart and sweet — sunshine on a plate.", size: "6–20 servings" },
+  { id: 6,  name: "Esterházy",     image: "https://i.imgur.com/aUcKPRw.jpg",  category: "Specialty",  tag: "Elegant",        desc: "A refined Hungarian classic with multiple thin nut-based sponge layers joined by silky buttercream, crowned with its signature spider-web chocolate pattern.", size: "8–20 servings" },
+  { id: 7,  name: "Bird's Milk",   image: "https://i.imgur.com/02S6jom.jpg",  category: "Classic",    tag: "Soviet Classic", desc: "The legendary Soviet-era soufflé cake — impossibly light, airy vanilla soufflé encased in rich dark chocolate coating. A true icon of Eastern European baking.", size: "8–16 servings" },
+  { id: 8,  name: "Cheesecake",    image: "https://i.imgur.com/Bcb0k7J.jpeg", category: "Cheesecake", tag: "No-Bake",        desc: "Creamy, velvety cheesecake on a buttery crumb base. Made with full-fat cream cheese, a whisper of vanilla, and topped with fresh seasonal fruit.", size: "6–20 servings" },
+  { id: 9,  name: "Fluffy",        image: "https://i.imgur.com/NliZ81m.jpeg", category: "Sponge",     tag: "Airy",           desc: "Our lightest creation — an ethereal chiffon sponge soaked in syrup, filled with whipped cream and berries. As light and delicate as a cloud.", size: "6–18 servings" },
+  { id: 10, name: "Pavlova",       image: "https://i.imgur.com/7XExzfo.jpeg", category: "Meringue",   tag: "Stunning",       desc: "Crispy meringue shell with a marshmallow-soft center, crowned with fresh whipped cream and vibrant seasonal berries. Elegant simplicity at its finest.", size: "8–16 servings" },
+  { id: 11, name: "Gingerbread",   image: "https://i.imgur.com/yRmHQde.jpeg", category: "Spiced",     tag: "Warm & Cozy",    desc: "Deeply spiced gingerbread layers with warming cinnamon, ginger, and clove, softened with cream cheese frosting. A hug in cake form.", size: "8–20 servings" },
+  { id: 12, name: "Royal Ruins",   image: "https://i.imgur.com/emjcPSn.jpeg", category: "Specialty",  tag: "Premium",        desc: "Assembled from crumbled sponge pieces layered with rich cream — an intentionally rustic, ruined appearance that turns imperfection into charm.", size: "10–30+ servings" },
+  { id: 13, name: "King's Cake",   image: "https://i.imgur.com/paaH7xO.jpeg", category: "Specialty",  tag: "Regal",          desc: "A sumptuous celebratory dessert built from rich short crust layers with meringue cream, adorned with fresh strawberries, kiwis, and seasonal fruit.", size: "10–25 servings" },
+  { id: 14, name: "Apple Pie",     image: "https://i.imgur.com/HGEFjNa.jpeg", category: "Fruit",      tag: "Autumn",         desc: "Warmly spiced apple layers nestled in cinnamon cream cheese frosting with caramelized apple topping. A harvest celebration in every slice.", size: "6–18 servings" },
+  { id: 15, name: "Pear Pie",      image: "https://i.imgur.com/uJoT5DF.jpeg", category: "Fruit",      tag: "Delicate",       desc: "Tender poached pear and almond frangipane in a light vanilla sponge, finished with vanilla cream and a pear fan decoration. Subtly sophisticated.", size: "6–16 servings" },
+  { id: 16, name: "Pineapple",     image: "https://i.imgur.com/XUOfb5M.jpeg", category: "Fruit",      tag: "Tropical",       desc: "A burst of tropical sunshine — moist pineapple-infused sponge layered with whipped cream and fresh pineapple chunks. Instantly transporting.", size: "6–20 servings" },
+  { id: 17, name: "Meringue Roll", image: "https://i.imgur.com/f6rPzgP.jpeg", category: "Meringue",   tag: "Sweet",          desc: "Towers of hand-piped Swiss meringue kisses, toasted golden, surrounding a lemon curd and cream center. Dramatic, delicious, and unforgettable.", size: "8–16 servings" },
+  { id: 18, name: "Sponge Roll",   image: "https://i.imgur.com/uno3x1l.png",  category: "Sponge",     tag: "Classic",        desc: "A soft, airy sponge sheet rolled around a smooth cream filling, flavored with vanilla or cocoa. Each slice reveals a graceful spiral of cake and filling.", size: "6–30+ servings" },
+  { id: 19, name: "Fairytale",     image: "https://i.imgur.com/LBeJQOj.jpeg", category: "Classic",    tag: "Magical",        desc: "Soft moist sponge layers generously coated in custard cream with alternating layers of mixed berry jam. Timeless, nostalgic, and endlessly charming.", size: "8–20 servings" },
+  { id: 20, name: "Pecan Cake",    image: "https://i.imgur.com/gY9VFUX.jpeg", category: "Nut",        tag: "Rich",           desc: "Dense, buttery pecan pound cake made with honey, sour cream, and black tea. Pure, comforting sweetness with a gentle nuttiness in every bite.", size: "8–20 servings" },
+  { id: 21, name: "Charlotte",     image: "https://i.imgur.com/JztsnwL.jpeg", category: "Mousse",     tag: "French",         desc: "A classic French mousse cake — moist ladyfingers lining the pan, filled with Bavarian cream and strawberry mousse. Elegant enough for any occasion.", size: "6–16 servings" },
+  { id: 22, name: "Polar Bear",    image: "https://i.imgur.com/crPL5IR.jpeg", category: "Specialty",  tag: "Showstopper",    desc: "A rich vanilla and chocolate layered cake with a chocolaty gold finish, cloaked in pale mascarpone frosting. The ultimate celebration centerpiece.", size: "8–20 servings" },
+  { id: 23, name: "Drunken Cherry",image: "https://i.imgur.com/rfLUhEQ.png",  category: "Chocolate",  tag: "Indulgent",      desc: "Rich chocolate sponge soaked in cherry liqueur, layered with bittersweet chocolate ganache and whole brandied cherries. Bold, adult, and irresistible.", size: "8–20 servings" },
+  { id: 24, name: "Cream Puffs",   image: "https://i.imgur.com/Et4QqLT.jpeg", category: "Pastry",     tag: "Crowd Favorite", desc: "Light choux pastry puffs filled with silky vanilla or chocolate pastry cream, dusted with powdered sugar. Sold by the dozen — impossible to have just one.", size: "12–48 pieces" },
+  { id: 25, name: "Kartoshka",     image: "https://i.imgur.com/hRNJpo3.jpeg", category: "Pastry",     tag: "Traditional",    desc: "The beloved Soviet-era potato-shaped truffle — crushed cookies, cocoa, and cream rolled into little logs, dusted with cocoa powder. Pure childhood nostalgia.", size: "12–36 pieces" },
+  { id: 26, name: "Baklava",       image: "https://i.imgur.com/JMtJu2p.jpeg", category: "Pastry",     tag: "Middle Eastern", desc: "Hundreds of paper-thin phyllo layers with walnuts, pistachios, and rose-scented honey syrup. Crispy, sticky, sweet perfection.", size: "24–48 pieces" },
+  { id: 27, name: "Zefir",         image: "https://i.imgur.com/oH0POqa.jpeg", category: "Pastry",     tag: "Russian",        desc: "Soft, airy apple-marshmallow confections piped into perfect rosettes. Made from fruit purée, agar-agar, and whipped egg whites. Delicate and light.", size: "12–36 pieces" },
+  { id: 28, name: "Drunken Cherry",image: "https://i.imgur.com/rfLUhEQ.png",  category: "Chocolate",  tag: "Indulgent",      desc: "Rich chocolate sponge soaked in cherry liqueur, layered with bittersweet chocolate ganache and whole brandied cherries. Bold, adult, and irresistible.", size: "8–20 servings" },
+];
+
+const CATEGORIES = ["All", ...new Set(CAKES.map(c => c.category))];
+
+const REVIEWS = [
+  { name: "Sarah K.", stars: 5, text: "The Napoleon cake was absolutely breathtaking. Every layer was perfect and the cream was incredibly light. My whole family is already asking when we can order again!", emoji: "💫", date: "Nov 2024" },
+  { name: "Rebecca M.", stars: 5, text: "Ordered the Pavlova for my daughter's birthday and it was the most beautiful cake I've ever seen in person. The meringue was perfectly crispy and the inside was soft as a cloud.", emoji: "🎂", date: "Oct 2024" },
+  { name: "David L.", stars: 5, text: "The Medovik brought me right back to my grandmother's kitchen in Russia. Authentic, delicious, and made with so much love. You can taste the difference.", emoji: "🍯", date: "Oct 2024" },
+  { name: "Miriam T.", stars: 5, text: "Sweet Mishpuchah is the real deal. I've tried many bakeries but nothing compares to the quality here. The Bird's Milk cake was unbelievably good — exactly as I remembered.", emoji: "🐦", date: "Sep 2024" },
+  { name: "Jake F.", stars: 5, text: "The Polar Bear cake for my son's birthday was beyond anything I expected. Every kid at the party was speechless. And it tasted just as incredible as it looked!", emoji: "🐻‍❄️", date: "Sep 2024" },
+  { name: "Anna V.", stars: 5, text: "The Kievsky cake is perfection. I've been searching for an authentic version for years and this is it. The hazelnut meringue layers are extraordinary. This is a gem.", emoji: "🌸", date: "Aug 2024" },
+];
+
+// ============================================================
+// PAGE NAVIGATION
+// ============================================================
+let currentPage = 'home';
+
+function showPage(page) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + page).classList.add('active');
+  document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
+  const navEl = document.getElementById('nav-' + page);
+  if (navEl) navEl.classList.add('active');
+  currentPage = page;
+  window.scrollTo(0, 0);
+  if (page === 'gallery') renderGallery();
+  if (page === 'reviews') renderReviews();
+}
+
+function toggleMobileNav() {
+  document.getElementById('mobileNav').classList.toggle('open');
+}
+function closeMobileNav() {
+  document.getElementById('mobileNav').classList.remove('open');
+}
+
+// Nav scroll effect
+window.addEventListener('scroll', () => {
+  document.getElementById('mainNav').classList.toggle('scrolled', window.scrollY > 40);
+});
+
+// ============================================================
+// RIBBON
+// ============================================================
+let ribbonAutoPlay = true;
+let ribbonPos = 0;
+let ribbonDragging = false;
+let ribbonDragStart = 0;
+let ribbonDragStartPos = 0;
+let ribbonVelocity = 0;
+let ribbonLastX = 0;
+let ribbonRAF = null;
+let ribbonModalOpen = false;
+let selectedCakeIndex = 0;
+
+const CARD_WIDTH = 200 + 20; // card + gap
+const RIBBON_SPEED = 0.6; // px per frame
+
+function buildRibbon() {
+  const track = document.getElementById('ribbonTrack');
+  // Triple the cakes for seamless looping
+  const allCakes = [...CAKES, ...CAKES, ...CAKES];
+  track.innerHTML = allCakes.map((cake, i) => `
+    <div class="cake-card" onclick="openCakeModal(${cake.id})" data-index="${i}">
+      <div class="cake-thumb">
+        <img src="${cake.image}" alt="${cake.name}" style="width:100%;height:100%;object-fit:cover;display:block;">
+        <div class="cake-thumb-overlay"></div>
+      </div>
+      <div class="cake-card-body">
+        <div class="cake-name">${cake.name}</div>
+        <div class="cake-desc-short">${cake.tag}</div>
+        <div class="cake-view-btn">
+          View Details
+          <svg width="10" height="10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+        </div>
+      </div>
+    </div>
+  `).join('');
+
+  // Start at middle copy
+  ribbonPos = CAKES.length * CARD_WIDTH;
+  applyRibbonPos();
+  startRibbonAnim();
+  setupRibbonDrag();
+}
+
+function applyRibbonPos() {
+  const track = document.getElementById('ribbonTrack');
+  if (!track) return;
+  // Seamless loop boundaries
+  const totalW = CAKES.length * CARD_WIDTH;
+  if (ribbonPos >= totalW * 2) ribbonPos -= totalW;
+  if (ribbonPos < totalW) ribbonPos += totalW;
+  track.style.transform = `translateX(-${ribbonPos}px)`;
+}
+
+function startRibbonAnim() {
+  cancelAnimationFrame(ribbonRAF);
+  function tick() {
+    if (!ribbonDragging && ribbonAutoPlay && !ribbonModalOpen) {
+      ribbonPos += RIBBON_SPEED;
+      applyRibbonPos();
+    } else if (!ribbonDragging && ribbonVelocity !== 0) {
+      ribbonPos += ribbonVelocity;
+      ribbonVelocity *= 0.92;
+      if (Math.abs(ribbonVelocity) < 0.05) ribbonVelocity = 0;
+      applyRibbonPos();
+    }
+    ribbonRAF = requestAnimationFrame(tick);
+  }
+  ribbonRAF = requestAnimationFrame(tick);
+}
+
+function setupRibbonDrag() {
+  const track = document.getElementById('ribbonTrack');
+
+  const onDown = (clientX) => {
+    ribbonDragging = true;
+    ribbonDragStart = clientX;
+    ribbonDragStartPos = ribbonPos;
+    ribbonVelocity = 0;
+    ribbonLastX = clientX;
+    track.style.cursor = 'grabbing';
+  };
+  const onMove = (clientX) => {
+    if (!ribbonDragging) return;
+    const dx = clientX - ribbonDragStart;
+    ribbonVelocity = ribbonLastX - clientX;
+    ribbonLastX = clientX;
+    ribbonPos = ribbonDragStartPos + dx * -1;
+    applyRibbonPos();
+  };
+  const onUp = () => {
+    ribbonDragging = false;
+    track.style.cursor = 'grab';
+  };
+
+  // Mouse
+  track.addEventListener('mousedown', e => onDown(e.clientX));
+  window.addEventListener('mousemove', e => onMove(e.clientX));
+  window.addEventListener('mouseup', onUp);
+
+  // Touch
+  track.addEventListener('touchstart', e => { onDown(e.touches[0].clientX); }, { passive: true });
+  track.addEventListener('touchmove', e => { onMove(e.touches[0].clientX); }, { passive: true });
+  track.addEventListener('touchend', onUp);
+}
+
+// Arrow buttons
+document.getElementById('ribbonLeft').addEventListener('click', () => {
+  ribbonVelocity = 0;
+  ribbonPos -= CARD_WIDTH;
+  applyRibbonPos();
+});
+document.getElementById('ribbonRight').addEventListener('click', () => {
+  ribbonVelocity = 0;
+  ribbonPos += CARD_WIDTH;
+  applyRibbonPos();
+});
+
+// Play/pause toggle
+const playBtn = document.getElementById('ribbonPlayBtn');
+const playIcon = document.getElementById('ribbonPlayIcon');
+playBtn.addEventListener('click', () => {
+  ribbonAutoPlay = !ribbonAutoPlay;
+  playIcon.innerHTML = ribbonAutoPlay
+    ? '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>'
+    : '<path d="M8 5v14l11-7z"/>';
+});
+
+// ============================================================
+// CAKE MODAL
+// ============================================================
+function openCakeModal(id) {
+  selectedCakeIndex = id;
+  populateModal(CAKES[id]);
+  document.getElementById('cakeModalOverlay').classList.add('open');
+  ribbonModalOpen = true;
+  document.body.style.overflow = 'hidden';
+}
+
+function populateModal(cake) {
+  document.getElementById('cakeModalEmoji').innerHTML = `<img src="${cake.image}" alt="${cake.name}" style="width:100%;height:auto;display:block;">`;
+  document.getElementById('cakeModalHero').style.background = 'none';
+  document.getElementById('cakeModalTitle').textContent = cake.name;
+  document.getElementById('cakeModalDesc').textContent = cake.desc;
+  document.getElementById('cakeModalTag').textContent = cake.tag;
+  document.getElementById('cakeModalSize').textContent = cake.size;
+  document.getElementById('cakeModalCat').textContent = cake.category;
+}
+
+function modalNav(dir) {
+  selectedCakeIndex = (selectedCakeIndex + dir + CAKES.length) % CAKES.length;
+  populateModal(CAKES[selectedCakeIndex]);
+}
+
+function closeCakeModal(e) {
+  if (e.target === document.getElementById('cakeModalOverlay')) closeCakeModalDirect();
+}
+function closeCakeModalDirect() {
+  document.getElementById('cakeModalOverlay').classList.remove('open');
+  ribbonModalOpen = false;
+  document.body.style.overflow = '';
+}
+
+// Keyboard navigation
+document.addEventListener('keydown', e => {
+  if (!ribbonModalOpen) return;
+  if (e.key === 'ArrowLeft') modalNav(-1);
+  if (e.key === 'ArrowRight') modalNav(1);
+  if (e.key === 'Escape') closeCakeModalDirect();
+});
+
+function orderThisCake() {
+  closeCakeModalDirect();
+  showPage('order');
+  // Pre-select the cake
+  setTimeout(() => {
+    const btns = document.querySelectorAll('.cake-pick-btn');
+    btns.forEach(b => b.classList.remove('selected'));
+    const name = CAKES[selectedCakeIndex].name;
+    btns.forEach(b => { if (b.dataset.cake === name) b.classList.add('selected'); });
+    b => b.dataset.cake === name && b.classList.add('selected');
+  }, 100);
+}
+
+// ============================================================
+// GALLERY
+// ============================================================
+let activeFilter = 'All';
+
+function renderGallery() {
+  const filterBar = document.getElementById('galleryFilter');
+  const grid = document.getElementById('galleryGrid');
+
+  filterBar.innerHTML = CATEGORIES.map(cat => `
+    <button class="filter-btn ${cat === activeFilter ? 'active' : ''}" onclick="setFilter('${cat}')">${cat}</button>
+  `).join('');
+
+  const filtered = activeFilter === 'All' ? CAKES : CAKES.filter(c => c.category === activeFilter);
+  grid.innerHTML = filtered.map(cake => `
+    <div class="gallery-item" onclick="openCakeModal(${cake.id})" style="position:relative;">
+      <img src="${cake.image}" alt="${cake.name}" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0;display:block;">
+      <div class="gallery-overlay">
+        <div class="gallery-item-name">${cake.name}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function setFilter(cat) {
+  activeFilter = cat;
+  renderGallery();
+}
+
+// ============================================================
+// ORDER
+// ============================================================
+function buildOrderCakePicker() {
+  const grid = document.getElementById('cakePicker');
+  // Show first 9 most popular
+  const popular = [0,2,4,7,8,10,12,18,22];
+  grid.innerHTML = popular.map(id => {
+    const c = CAKES[id];
+    return `<button class="cake-pick-btn" data-cake="${c.name}" onclick="selectCake(this, '${c.name}')"><img src="${c.image}" alt="${c.name}" style="width:32px;height:32px;object-fit:cover;border-radius:3px;display:block;margin:0 auto 0.2rem;">${c.name}</button>`;
+  }).join('');
+}
+
+function selectCake(btn, name) {
+  document.querySelectorAll('.cake-pick-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+}
+
+function submitOrder() {
+  showToast('✓ Order request submitted! We\'ll be in touch within 24 hours.');
+}
+
+// ============================================================
+// REVIEWS
+// ============================================================
+let selectedStars = 0;
+
+function renderReviews() {
+  document.getElementById('reviewsGrid').innerHTML = REVIEWS.map(r => `
+    <div class="review-card">
+      <div class="review-quote">"</div>
+      <div class="review-stars">${'★'.repeat(r.stars)}</div>
+      <p class="review-text">${r.text}</p>
+      <div class="review-author">
+        <div class="review-avatar">${r.emoji}</div>
+        <div>
+          <div class="review-name">${r.name}</div>
+          <div class="review-date">${r.date}</div>
+        </div>
+      </div>
+    </div>
+  `).join('');
+
+  // Star select
+  document.querySelectorAll('.star-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      selectedStars = parseInt(btn.dataset.star);
+      document.querySelectorAll('.star-btn').forEach((b, i) => {
+        b.classList.toggle('active', i < selectedStars);
+      });
+    });
+  });
+}
+
+function submitReview() {
+  const name = document.getElementById('reviewName').value.trim();
+  const text = document.getElementById('reviewText').value.trim();
+  if (!name || !text || !selectedStars) {
+    showToast('Please fill in your name, rating, and review.');
+    return;
+  }
+  showToast('Thank you for your review! It means the world to us ♥');
+  document.getElementById('reviewName').value = '';
+  document.getElementById('reviewText').value = '';
+  selectedStars = 0;
+  document.querySelectorAll('.star-btn').forEach(b => b.classList.remove('active'));
+}
+
+// ============================================================
+// CONTACT
+// ============================================================
+function submitContact() {
+  showToast('Message sent! We\'ll get back to you within 24 hours.');
+}
+
+// ============================================================
+// TOAST
+// ============================================================
+function showToast(msg) {
+  const toast = document.getElementById('successToast');
+  document.getElementById('successToastMsg').textContent = msg;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 4000);
+}
+
+// ============================================================
+// INIT
+// ============================================================
+buildRibbon();
+buildOrderCakePicker();
+document.getElementById('nav-home').classList.add('active');
+</script>
+</body>
+</html>
